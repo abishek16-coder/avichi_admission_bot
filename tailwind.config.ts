@@ -1,25 +1,42 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./hooks/**/*.{ts,tsx}"],
+  content: [
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./hooks/**/*.{ts,tsx}",
+  ],
   darkMode: "class",
   theme: {
     extend: {
       colors: {
+        bg: "var(--bg)",
+        panel: "var(--panel)",
+        border: "var(--border)",
+        primary: {
+          DEFAULT: "var(--primary)",
+          glow: "var(--primary-glow)",
+        },
+        accent: "var(--accent)",
+        text: {
+          DEFAULT: "var(--text)",
+          muted: "var(--text-muted)",
+        },
         brand: {
-          DEFAULT: "var(--brand)",
-          primary: "var(--primary)",
+          DEFAULT: "var(--primary)",
+          glow: "var(--primary-glow)",
           accent: "var(--accent)",
         },
       },
       fontFamily: {
-        serif: ["var(--font-playfair)", "Playfair Display", "Georgia", "serif"],
-        sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        heading: ["var(--font-heading)", "Space Grotesk", "sans-serif"],
+        sans: ["var(--font-body)", "Inter", "system-ui", "sans-serif"],
+        tamil: ["var(--font-tamil)", "Noto Sans Tamil", "sans-serif"],
       },
       boxShadow: {
-        glow: "0 0 50px color-mix(in srgb, var(--primary) 35%, transparent)",
-        pill: "0 4px 20px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04)",
-        "pill-dark": "0 4px 24px -2px rgba(0, 0, 0, 0.4)",
+        glow: "0 0 50px rgba(167, 139, 250, 0.35)",
+        "glow-lg": "0 0 80px rgba(124, 92, 255, 0.4)",
+        pill: "0 4px 24px -2px rgba(0, 0, 0, 0.5)",
       },
     },
   },
