@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { messages?: ChatMessage[] };
+  let body: { messages?: ChatMessage[]; language?: string };
   try {
     body = await request.json();
   } catch {
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
           body: JSON.stringify({
             model: groqModel,
             messages: [
-              { role: "system", content: buildSystemInstruction(knowledge) },
+              { role: "system", content: buildSystemInstruction(knowledge, body.language) },
               ...prior,
               { role: "user", content: latest },
             ],

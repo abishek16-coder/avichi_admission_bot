@@ -15,13 +15,24 @@ export type ChatStatus = "idle" | "thinking" | "streaming" | "error";
 
 interface UseChatOptions {
   onStreamingFinish?: (fullText: string) => void;
+  initialLanguage?: "en" | "ta";
 }
 
-export function useChat({ onStreamingFinish }: UseChatOptions = {}) {
+const FRIENDLY_ERROR_EN =
+  "I'm a bit busy right now. Please try again in a few seconds, or call the admission office.";
+const FRIENDLY_ERROR_TA =
+  "தற்போது சற்று பணி மிகுதியாக உள்ளது. சில வினாடிகளுக்குப் பிறகு மீண்டும் முயற்சிக்கவும் அல்லது சேர்க்கை அலுவலகத்தை அழைக்கவும்.";
+
+export function useChat({
+  onStreamingFinish,
+  initialLanguage = "en",
+}: UseChatOptions = {}) {
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [status, setStatus] = useState<ChatStatus>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [language, setLanguage] = useState<"en" | "ta">(initialLanguage);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const lastUserTextRef = useRef<string>("");
 
   const clearChat = useCallback(() => {
     if (abortControllerRef.current) {
@@ -34,10 +45,11 @@ export function useChat({ onStreamingFinish }: UseChatOptions = {}) {
   }, []);
 
   const sendMessage = useCallback(
-    async (rawText: string, fromVoice = false) => {
+    async (rawText: string, fromVoice = false, overrideLang?: "en" | "ta") => {
       const text = rawText.trim();
       if (!text || status === "thinking" || status === "streaming") return;
 
+      lastUserTextRef.current = text;
       setError(null);
 
       const userMessage: MessageItem = {
@@ -56,6 +68,7 @@ export function useChat({ onStreamingFinish }: UseChatOptions = {}) {
         isStreaming: true,
       };
 
+      const currentLang = overrideLang ?? language;
       const updatedHistory = [...messages, userMessage];
       setMessages([...updatedHistory, botPlaceholder]);
       setStatus("thinking");
@@ -76,13 +89,15 @@ export function useChat({ onStreamingFinish }: UseChatOptions = {}) {
         const response = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: payload }),
+          body: JSON.stringify({
+            messages: payload,
+            language: currentLang,
+          }),
           signal: controller.signal,
         });
 
         if (!response.ok || !response.body) {
-          const errData = await response.json().catch(() => null);
-          throw new Error(errData?.error || "Could not generate answer. Please try again.");
+          throw new Error("Chat request failed");
         }
 
         const reader = response.body.getReader();
@@ -154,10 +169,14 @@ export function useChat({ onStreamingFinish }: UseChatOptions = {}) {
           setStatus("idle");
           return;
         }
-        const errorMsg = err instanceof Error ? err.message : "Something went wrong.";
-        setError(errorMsg);
+
+        // Never expose raw technical errors to users
+        const friendlyError =
+          currentLang === "ta" ? FRIENDLY_ERROR_TA : FRIENDLY_ERROR_EN;
+        setError(friendlyError);
         setStatus("error");
-        // Remove the empty bot placeholder if it produced no text
+
+        // Remove empty placeholder or replace with friendly message
         setMessages((prev) => {
           const last = prev[prev.length - 1];
           if (last && last.id === botMessageId && !last.text) {
@@ -169,8 +188,14 @@ export function useChat({ onStreamingFinish }: UseChatOptions = {}) {
         abortControllerRef.current = null;
       }
     },
-    [messages, onStreamingFinish, status],
+    [language, messages, onStreamingFinish, status],
   );
+
+  const retryLast = useCallback(() => {
+    if (!lastUserTextRef.current || status === "thinking" || status === "streaming") return;
+    setError(null);
+    sendMessage(lastUserTextRef.current);
+  }, [sendMessage, status]);
 
   const regenerateLast = useCallback(() => {
     if (messages.length < 2 || status === "thinking" || status === "streaming") return;
@@ -193,7 +218,10 @@ export function useChat({ onStreamingFinish }: UseChatOptions = {}) {
     messages,
     status,
     error,
+    language,
+    setLanguage,
     sendMessage,
+    retryLast,
     regenerateLast,
     clearChat,
   };

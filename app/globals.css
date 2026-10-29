@@ -1,183 +1,173 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary: #0B3A6A;
-  --accent: #C9A227;
-  --brand: var(--primary);
-  --bg-light: #F8FAFC;
-  --bg-dark: #0B1120;
-  --font-playfair: 'Playfair Display', Georgia, serif;
-  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color-scheme: light;
+  /* Default Reflect-inspired purple theme */
+  --bg: #05040D;
+  --panel: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.10);
+  --primary: #7C5CFF;
+  --primary-glow: #A78BFA;
+  --accent: #5EEAD4;
+  --text: #F4F2FF;
+  --text-muted: #A9A3C7;
+
+  /* ========================================================
+     AVICHI BRAND ALTERNATIVE (Navy & Red):
+     To switch to the official Avichi College crest brand colors,
+     uncomment the block below and comment the purple tokens above:
+     --------------------------------------------------------
+     --primary: #0B3A6A;
+     --primary-glow: #2563EB;
+     --accent: #DC2626;
+     ======================================================== */
 }
 
-.dark {
-  --primary: #2563EB;
-  --accent: #F59E0B;
-  --brand: #3B82F6;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
   color-scheme: dark;
 }
 
 body {
-  min-height: 100dvh;
-  font-family: var(--font-inter);
-  background-color: var(--bg-light);
-  color: #0F172A;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), Inter, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
   overflow-x: hidden;
+  min-height: 100dvh;
 }
 
-.dark body {
-  background-color: var(--bg-dark);
-  color: #F8FAFC;
+/* Typography styles */
+.font-heading {
+  font-family: var(--font-heading), 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
 }
 
-/* Heading font helper */
-.font-serif {
-  font-family: var(--font-playfair);
+.font-tamil {
+  font-family: var(--font-tamil), 'Noto Sans Tamil', sans-serif;
 }
 
-/* Subtle ambient background blobs */
-@keyframes blob-float-1 {
-  0%, 100% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(30px, -40px) scale(1.08); }
+/* Hero text gradient: white to lavender */
+.headline-gradient {
+  background: linear-gradient(180deg, #FFFFFF 0%, #E0D9FF 55%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-@keyframes blob-float-2 {
-  0%, 100% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(-35px, 35px) scale(1.05); }
+/* Glass panel */
+.glass-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-.ambient-blob-1 {
-  animation: blob-float-1 22s ease-in-out infinite;
+.glass-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-.ambient-blob-2 {
-  animation: blob-float-2 26s ease-in-out infinite;
+/* Input pill focus state */
+.chat-input-pill {
+  background: rgba(13, 10, 28, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ambient-blob-1,
-  .ambient-blob-2,
-  .animate-glow-ring,
-  .typing-dot,
-  .waveform span {
-    animation: none !important;
+.chat-input-pill:focus-within {
+  border-color: rgba(167, 139, 250, 0.5);
+  box-shadow: 0 0 30px rgba(124, 92, 255, 0.25), inset 0 0 15px rgba(167, 139, 250, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Rotating conic gradient border button */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate-angle {
+  to {
+    --angle: 360deg;
   }
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
 }
 
-/* Soft breathing glow ring for landing hero logo */
-@keyframes glow-breathe {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.35;
-  }
-  50% {
-    transform: scale(1.08);
-    opacity: 0.65;
-  }
-}
-
-.animate-glow-ring {
-  animation: glow-breathe 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Blinking streaming caret */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.streaming-caret {
-  display: inline-block;
-  width: 7px;
-  height: 1.1em;
-  background-color: currentColor;
-  margin-left: 3px;
-  vertical-align: -0.15em;
-  border-radius: 1px;
-  animation: blink 0.8s infinite;
-}
-
-/* Audio waveform bars */
-.waveform {
-  display: flex;
-  align-items: flex-end;
-  gap: 2.5px;
-  height: 16px;
-}
-
-.waveform span {
-  display: block;
-  width: 3px;
-  height: 100%;
-  border-radius: 999px;
-  background-color: currentColor;
-  animation: wave 0.8s ease-in-out infinite;
-  transform-origin: bottom;
-}
-
-.waveform span:nth-child(1) { animation-delay: 0s; }
-.waveform span:nth-child(2) { animation-delay: 0.2s; }
-.waveform span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes wave {
-  0%, 100% { transform: scaleY(0.3); }
-  50% { transform: scaleY(1); }
-}
-
-/* Shimmer skeleton for thinking state */
-@keyframes shimmer-sweep {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.animate-shimmer {
+.glowing-outline-btn {
   position: relative;
-  overflow: hidden;
+  border-radius: 9999px;
+  background: rgba(13, 10, 28, 0.85);
+  padding: 8px 18px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  transition: all 0.25s ease-out;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.animate-shimmer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.4),
-    transparent
-  );
-  animation: shimmer-sweep 1.8s infinite;
+.glowing-outline-btn:hover {
+  border-color: rgba(167, 139, 250, 0.8);
+  box-shadow: 0 0 24px rgba(124, 92, 255, 0.4);
+  transform: translateY(-2px);
 }
 
-.dark .animate-shimmer::after {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.12),
-    transparent
-  );
+.glowing-outline-btn:active {
+  transform: scale(0.96);
 }
 
-/* Custom sleek scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+/* Shimmer lines animation */
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+.animate-shimmer-sweep {
+  animation: shimmer-sweep 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35);
-  border-radius: 999px;
+
+/* Streaming cursor */
+.streaming-cursor::after {
+  content: '▋';
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--primary-glow);
+  animation: blink 1s step-start infinite;
 }
-.dark ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.2);
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
