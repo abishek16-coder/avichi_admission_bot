@@ -1,45 +1,69 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { GraduationCap, BookOpen, SendHorizontal, Award } from "lucide-react";
+import { BookOpen, GraduationCap, SendHorizontal, Award } from "lucide-react";
 
 interface SuggestionChipsProps {
   onSelect: (chipText: string) => void;
+  language?: "en" | "ta";
 }
 
-const chips = [
-  { text: "Courses offered", icon: BookOpen },
-  { text: "Eligibility", icon: GraduationCap },
-  { text: "How to apply", icon: SendHorizontal },
-  { text: "Scholarships & fees", icon: Award },
+const chipsData = [
+  {
+    en: "Courses offered",
+    ta: "வழங்கப்படும் படிப்புகள்",
+    icon: BookOpen,
+  },
+  {
+    en: "Eligibility",
+    ta: "சேர்க்கை தகுதி",
+    icon: GraduationCap,
+  },
+  {
+    en: "How to apply",
+    ta: "விண்ணப்பிப்பது எப்படி",
+    icon: SendHorizontal,
+  },
+  {
+    en: "Scholarships & fees",
+    ta: "உதவித்தொகை & கட்டணம்",
+    icon: Award,
+  },
 ];
 
-export default function SuggestionChips({ onSelect }: SuggestionChipsProps) {
+export default function SuggestionChips({
+  onSelect,
+  language = "en",
+}: SuggestionChipsProps) {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 max-w-2xl mx-auto px-4">
-      {chips.map((chip, idx) => {
-        const Icon = chip.icon;
-        return (
-          <motion.button
-            key={chip.text}
-            type="button"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              delay: 0.15 + idx * 0.06,
-              duration: 0.35,
-              ease: "easeOut",
-            }}
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={() => onSelect(chip.text)}
-            className="group flex items-center gap-2 rounded-full border border-slate-200/90 bg-white/80 px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 shadow-sm backdrop-blur-md transition-colors hover:border-brand hover:text-brand dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-200 dark:hover:border-brand-accent dark:hover:text-white"
-          >
-            <Icon className="h-3.5 w-3.5 text-slate-400 group-hover:text-brand dark:group-hover:text-brand-accent transition-colors" />
-            <span>{chip.text}</span>
-          </motion.button>
-        );
-      })}
+    <div className="w-full max-w-3xl mx-auto px-2 overflow-x-auto no-scrollbar py-2">
+      <div className="flex items-center justify-start sm:justify-center gap-2 sm:gap-2.5 min-w-max px-2">
+        {chipsData.map((chip, idx) => {
+          const Icon = chip.icon;
+          const label = language === "ta" ? chip.ta : chip.en;
+
+          return (
+            <motion.button
+              key={chip.en}
+              type="button"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: 0.15 + idx * 0.05,
+                duration: 0.35,
+                ease: "easeOut",
+              }}
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => onSelect(label)}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.04] border border-white/[0.09] text-xs sm:text-sm font-medium text-[#F4F2FF]/85 shadow-[0_4px_16px_rgba(0,0,0,0.35)] backdrop-blur-xl hover:border-primary-glow/60 hover:text-white hover:bg-white/[0.08] hover:shadow-[0_0_20px_rgba(124,92,255,0.25)] transition-all duration-200 select-none flex-shrink-0 cursor-pointer"
+            >
+              <Icon className="w-3.5 h-3.5 text-primary-glow flex-shrink-0" />
+              <span>{label}</span>
+            </motion.button>
+          );
+        })}
+      </div>
     </div>
   );
 }
