@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useChat } from "@/hooks/useChat";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
@@ -34,9 +34,7 @@ export default function AvichiChatApp() {
     startListening,
     stopListening,
   } = useSpeechRecognition({
-    onResult: (text) => {
-      // Live transcript is tracked by ChatInput
-    },
+    onResult: () => {},
   });
 
   function toggleListening() {
@@ -95,6 +93,8 @@ export default function AvichiChatApp() {
               voiceSupported={voiceSupported}
               onToggleListening={toggleListening}
               transcript={transcript}
+              isSpeaking={isSpeaking}
+              isThinking={status === "thinking" || status === "streaming"}
             />
           </motion.div>
         ) : (

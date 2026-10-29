@@ -1,6 +1,6 @@
 "use client";
 
-import { Mic, MicOff } from "lucide-react";
+import { Mic } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface MicButtonProps {

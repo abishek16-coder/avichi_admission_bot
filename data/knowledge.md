@@ -2,6 +2,7 @@
 ## developer 
 this chatbot created by 
 -name : MUTHU ABISHEK M
+-posting : president of BCA department  
 -BCA DEPARTMENT 3rd YEAR
 -ID : 24BCA30
 

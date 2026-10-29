@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Plus, Sparkles, ExternalLink } from "lucide-react";
+import { Plus, ExternalLink } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { college } from "@/lib/config";
 

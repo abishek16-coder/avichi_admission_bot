@@ -67,6 +67,10 @@ body {
   .waveform span {
     animation: none !important;
   }
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Soft breathing glow ring for landing hero logo */

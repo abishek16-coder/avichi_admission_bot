@@ -9,4 +9,4 @@ export const college = {
   accent: process.env.NEXT_PUBLIC_ACCENT_COLOR ?? "#C9A227",
 };
 
-export const geminiModel = process.env.GEMINI_MODEL || "gemini-3-flash-preview";
+export const groqModel = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
